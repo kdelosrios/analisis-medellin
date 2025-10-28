@@ -5,7 +5,7 @@ download_data.main()
 
 from src.load_data import load_excel, load_excel_sheets
 from src.transform import estandarizar_diccionario, rellenar_valores
-from src.translate_codes import traducir_columnas, traducir_encabezados
+from src.translate_codes import traducir_columnas, traducir_encabezados, limpiar_encabezados
 
 #Cargar datos
 df_datos= load_excel("data/raw/ECV_2024.xlsx", sheetname=0)
@@ -31,5 +31,6 @@ assert df_diccionario2['Valor'].isna().sum() == 0, "Quedan valores vacíos en 'V
 # Traducir filas 
 df_datos = traducir_columnas(df_datos, df_diccionario2)
 df_datos= traducir_encabezados(df_datos, df_diccionario1)
+df_datos= limpiar_encabezados(df_datos)
 
 

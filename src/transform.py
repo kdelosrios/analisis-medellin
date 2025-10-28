@@ -23,3 +23,15 @@ def convertir_numeros(valor):
         return valor
 
 
+def crear_tabla_ingresos(df, inicio, fin):
+   '''
+    Parámetros:
+    - df: DataFrame original.
+    - inicio: índice de la primera columna a seleccionar (0-based).
+    - fin: índice de la última columna a seleccionar (exclusivo).
+    '''
+   tabla_filtrada = df.iloc[:, [3] + list(range(inicio, fin))]
+
+   return tabla_filtrada
+
+
