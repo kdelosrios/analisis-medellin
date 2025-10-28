@@ -12,3 +12,14 @@ def estandarizar_diccionario(dic2):
     dic2 = dic2.rename(columns={"Unnamed: 2": "Codigo"})
     return  dic2
 
+def convertir_numeros(valor):
+   
+    if isinstance(valor, str):
+        valor = valor.strip()          
+        valor = valor.replace(',', '.') 
+    try:
+        return float(valor)
+    except:
+        return valor
+
+

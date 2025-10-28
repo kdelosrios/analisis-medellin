@@ -33,27 +33,39 @@ def traducir_columnas (df_datos, df_diccionario2):
 
 def traducir_encabezados(df_datos, df_diccionario1):
     # Limpiar espacios
-    df_diccionario1["Variable"]= df_diccionario1["Variable"].astype(str).str.strip()
-    df_diccionario1["Etiqueta"]= df_diccionario1["Etiqueta"].astype(str).str.strip()
+    df_diccionario1["Variable"] = df_diccionario1["Variable"].astype(str).str.strip()
+    df_diccionario1["Etiqueta"] = df_diccionario1["Etiqueta"].astype(str).str.strip()
 
-    # Crear diccionario Varibale-> Etiqueta
-    dicc_encabezados= dict(zip(df_diccionario1["Variable"],df_diccionario1["Etiqueta"]))
+    # Crear diccionario Variable -> Etiqueta
+    dicc_encabezados = dict(zip(df_diccionario1["Variable"], df_diccionario1["Etiqueta"]))
 
-    # Traduccir los encabezados (renombrar columnas)
-    df_datos= df_datos.rename(columns=dicc_encabezados)
+    # Traducir encabezados (renombrar columnas)
+    df_datos = df_datos.rename(columns=dicc_encabezados)
 
-    #Quitar codigo inicial del encabezado
-    def limpiar_encabezado(nombre):
-        return re.sub(r'^[A-Za-z]{1,3}\.?\d+\s*:?\s*', '', nombre).strip()
-    df_datos.columns = [limpiar_encabezado(col) for col in df_datos.columns]
-
-    #Detectar columnas no traduccidas
+    # Detectar columnas no traducidas
     columnas_originales = set(dicc_encabezados.keys())
-    columnas_no_traduccidas= [i for i in df_datos.columns if i not in dicc_encabezados.values() and i in columnas_originales]
+    columnas_no_traducidas = [
+        i for i in df_datos.columns
+        if i not in dicc_encabezados.values() and i in columnas_originales
+    ]
 
-    if columnas_no_traduccidas:
-        print (f"Las siguientes columnas no tienen traducccion:{columnas_no_traduccidas}")
+    if columnas_no_traducidas:
+        print(f"Las siguientes columnas no tienen traducción: {columnas_no_traducidas}")
     else:
-        print(f"Todas las columnas fueron traducidas correctamente")
+        print("Todas las columnas fueron traducidas correctamente")
 
-    return  df_datos
+    return df_datos
+
+
+def limpiar_encabezados(df):
+    def limpiar(nombre):
+        nombre = str(nombre).strip()
+        # Reemplazar múltiples espacios o tabulaciones
+        nombre = re.sub(r'\s+', ' ', nombre)
+        # Eliminar códigos tipo A.3, H.2A, etc.
+        nombre = re.sub(r'^[A-Z]{1,2}\.\d+[A-Z]?\s*:\s*', '', nombre, flags=re.IGNORECASE)
+        return nombre.strip()
+    
+    df.columns = [limpiar(col) for col in df.columns]
+    return df
+
